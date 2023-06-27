@@ -1,0 +1,24 @@
+<?php 
+    //MEDIDA SE SEGURIDAD. SI ALGUIEN INTENTA ACCEDER A ESTE ARCHIVO DIRECTAMENTE, SE LO ENVÍA A LA PÁGINA DE INICIO DEL SITIO
+    if($_SERVER['REQUEST_METHOD'] == 'GET' && realpath(__FILE__) == realpath($_SERVER['SCRIPT_FILENAME'])) {
+        header('HTTP/1.0 403 Forbidden', TRUE, 403);
+        die(header( 'location: /' ));
+    }
+?>
+<?php
+    class Usuarios { //CLASE Usuarios. EL NOMBRE DE LA CLASE DEBE SER EL MISMO QUE EL DEL ARCHIVO MÁS .class.php
+        //ESTÁ CLASE NOS PERMITE CONECTARNOS A LA BASE DE DATOS PARA REALIZAR CONSULTAS MEDIANTE OTRAS CLASES QUE SE EXTENDERÁN A ESTA
+        private $host       =   "db";      // VARIABLE PRIVADA PARA ALMACENAR EL HOST DE LA BASE DE DATOS
+        private $db         =   "usuarios";        // VARIABLE PRIVADA PARA ALMACENAR EL NOMBRE DE LA BASE DE DATOS
+        private $user       =   "root";      // VARIABLE PRIVADA PARA ALMACENAR EL USUARIO DE LA BASE DE DATOS  
+        private $password   =   "";  // VARIABLE PRIVADA PARA ALMACENAR LA CONTRASEÑA DEL USUARIO DE LA BASE DE DATOS
+
+        protected function conectar() { //CREAMOS EL MÉTODO
+            $SQL = 'mysql:host=' . $this->host . ';dbname=' . $this->db; //LA VARIABLE SQL SERÁ IGUAL AL COMANDO mysql QUE FUNCIONA PARA CONECTARSE A UNA BASE DE DATOS MySQL
+            //DE A POCO SE LE IRÁN PASANDO LAS VARIABLES host Y db
+            $PDO = new PDO($SQL, $this->user, $this->password); //PDO ES UNA CAPA DE ACCESO A BASES DE DATOS. ES MÁS SEGURO QUE MySQLi. LE PASAMOS LAS VARIABLES PARA CREAR LA CONEXIÓN DE TIPO PDO
+            $PDO->setAttribute(PDO::ATTR_DEFAULT_FETCH_MODE, PDO::FETCH_ASSOC); //DAMOS ATRIBUTOS PARA OBTENER LOS DATOS DE LA BASE DE DATOS
+            return $PDO; //RETORNAMOS/OBTENEMOS/USAMOS LA CONEXIÓN
+        }
+    }
+?>
